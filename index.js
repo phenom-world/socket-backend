@@ -1,6 +1,6 @@
 const colors = require('colors');
 const { app } = require('./app.js');
-const { WebSocketServer } = require('ws');
+const { WebSocketServer, OPEN } = require('ws');
 
 const PORT = process.env.PORT || 80;
 
@@ -21,15 +21,12 @@ const wss = new WebSocketServer({
   path: '/ws',
 });
 
-const clients = [];
-
 wss.on('connection', function connection(ws) {
-  clients.push({ id: ws._socket._handle.fd, ws });
   ws.on('message', function (message) {
-    clients
-      .filter((item) => item.id !== ws._socket._handle.fd)
+    wss.clients
+      .filter((client) => client !== ws && client.readyState === OPEN)
       .forEach(function (client) {
-        client.ws.send(JSON.stringify(JSON.parse(message)));
+        client.send(JSON.stringify(JSON.parse(message)));
       });
   });
 });
