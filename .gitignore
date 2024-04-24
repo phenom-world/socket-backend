@@ -1,0 +1,8 @@
+/node_modules
+/config/.env
+/teams.json
+/teamsdet.js
+.DS_Store
+cont
+*logs
+build
