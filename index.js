@@ -24,7 +24,7 @@ const wss = new WebSocketServer({
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function (message) {
-    console.log(message, wss);
+    console.log(wss.clients);
     wss.clients
       .filter((client) => client !== ws && client.readyState === OPEN)
       .forEach(function (client) {
