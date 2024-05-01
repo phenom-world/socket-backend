@@ -29,21 +29,6 @@ wss.on('connection', function connection(ws) {
       .forEach(function (client) {
         client.send(JSON.stringify(JSON.parse(message)));
       });
-    const data = JSON.parse(message);
-    if (data?.action === 'live') {
-      const data = JSON.parse(message);
-      lamPostSavedinPastHour(data?.post_id).then((res) => {
-        if (!res) {
-          saveLampPost(data)
-            .then((lampPost) => {
-              console.log('lampPost saved:', lampPost);
-            })
-            .catch((error) => {
-              console.error('Error saving lampPost:', error);
-            });
-        }
-      });
-    }
   });
 });
 
