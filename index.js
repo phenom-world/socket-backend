@@ -23,27 +23,27 @@ const wss = new WebSocketServer({
 });
 
 wss.on('connection', function connection(ws) {
-  ws.on('message', function (message) {
-    console.log(wss.clients);
-    wss.clients
+  ws.on('message', async function (message) {
+    Array.from(wss.clients)
       .filter((client) => client !== ws && client.readyState === OPEN)
       .forEach(function (client) {
+        console.log(JSON.parse(message));
         client.send(JSON.stringify(JSON.parse(message)));
       });
-    // const data = JSON.parse(message);
-    // if (data?.action === 'live') {
-    //   const data = JSON.parse(message);
-    //   const isSaved = await lamPostSavedinPastHour(data?.post_id);
-    //   if (!isSaved) {
-    //     saveLampPost(data)
-    //       .then((lampPost) => {
-    //         console.log('lampPost saved:', lampPost);
-    //       })
-    //       .catch((error) => {
-    //         console.error('Error saving lampPost:', error);
-    //       });
-    //   }
-    // }
+    const data = JSON.parse(message);
+    if (data?.action === 'live') {
+      const data = JSON.parse(message);
+      const isSaved = await lamPostSavedinPastHour(data?.post_id);
+      if (!isSaved) {
+        saveLampPost(data)
+          .then((lampPost) => {
+            console.log('lampPost saved:', lampPost);
+          })
+          .catch((error) => {
+            console.error('Error saving lampPost:', error);
+          });
+      }
+    }
   });
 });
 
